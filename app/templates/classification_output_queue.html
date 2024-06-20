@@ -10,6 +10,10 @@
             margin: 0 auto;
         }
 
+        #download_json, #download_plot {
+            display: none;
+        }
+
 
     </style>
     <div class="row">
@@ -30,9 +34,16 @@
                         </div>
                     </div>
                 </div>
-
-
                 <a class="btn btn-dark" href="/classifications" role="button">Back</a>
+
+            </div>
+
+            <div class="card">
+                <a class="btn btn-dark" href="/download_json/{{ jobID }}" role="button" id="download_json">Download results</a>
+            </div>
+
+            <div class="card">
+                <a class="btn btn-dark" role="button" id="download_plot">Download plot</a>
             </div>
         </div>
     </div>
