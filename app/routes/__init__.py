@@ -3,3 +3,4 @@ from .classifications_id import *
 from .histograms import *
 from .info import *
 from .home import *
+from .download import *

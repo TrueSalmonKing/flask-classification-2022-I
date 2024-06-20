@@ -17,7 +17,7 @@ function update(jobId) {
                 case "finished":
                     $('#spinner').hide();
                     $('#waitText').text("");
-                    makeGraph(data['data']);
+                    makeGraph(data['data'], jobId)
                     break;
                 case "started":
                     $('#waitText').text("Job started...");
@@ -46,7 +46,7 @@ $(document).ready(function () {
     update(jobID);
 });
 
-function makeGraph(results) {
+function makeGraph(results, jobId) {
     var ctx = document.getElementById("classificationOutput").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'horizontalBar',
@@ -79,6 +79,14 @@ function makeGraph(results) {
                         beginAtZero: true
                     }
                 }]
+            },
+            animation: {
+                onComplete: function() {
+                    document.getElementById("download_plot").href = myChart.toBase64Image();
+                    document.getElementById("download_plot").download = "results_"+jobId+".png";
+                    document.getElementById("download_plot").style.display="block";
+                    document.getElementById("download_json").style.display="block";
+                }
             }
         }
     });
