@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Select Model and Image</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <h4>
+            Image:
+        </h4>
+        <p>
+            {{ form.image }}
+        </p>
+
+        <h4>
+            Color
+        </h4>
+        <p>
+            {{ form.color }}
+            {% for error in form.color.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
+        </p>
+
+        <h4>
+            Brightness
+        </h4>
+        <p>
+            {{ form.brightness }}
+            {% for error in form.brightness.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
+        </p>
+
+        <h4>
+            Contrast
+        </h4>
+        <p>
+            {{ form.contrast }}
+            {% for error in form.contrast.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
+        </p>
+
+        <h4>
+            Sharpness
+        </h4>
+        <p>
+            {{ form.sharpness }}
+            {% for error in form.sharpness.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
+        </p>
+
+        <button type="submit" class="btn btn-dark mb-2">Submit</button>
+    </form>
+{% endblock %}

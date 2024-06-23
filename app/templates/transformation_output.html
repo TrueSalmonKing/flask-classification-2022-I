@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <style>
+        .half-front-thumbnail {
+            position: relative;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+    </style>
+    <div class="row">
+        <div class="col">
+            <h4>Original Image</h4>
+            <div class="card">
+                <img class="half-front-thumbnail"
+                     src="{{ url_for('static', filename='imagenet_subset/'+image_id) }} "
+                     alt={{ image_id }}/>
+            </div>
+        </div>
+        <div class="col">
+            <h4>Transformed Image</h4>
+            <div class="card">
+                <img class="half-front-thumbnail"
+                        src="data:image/jpeg;base64, {{ transformed_img }}"
+                        alt="Transformed Image" />
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="transformation-values">
+                    <h5>Transformation Values Used:</h5>
+                    <ul>
+                        <li>Color: {{ color }}</li>
+                        <li>Brightness: {{ brightness }}</li>
+                        <li>Contrast: {{ contrast }}</li>
+                        <li>Sharpness: {{ sharpness }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <a class="btn btn-dark" href="" role="button" onclick="javascript:this.href=document.URL">Back</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
