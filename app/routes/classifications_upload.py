@@ -2,8 +2,9 @@ import redis
 from flask import render_template, request, flash, redirect
 from rq import Connection, Queue
 from rq.job import Job
-from werkzeug.utils import secure_filename
 import os
+import time
+import threading
 
 from app import app
 from app.forms.classification_upload_form import ClassificationUploadForm
@@ -11,12 +12,6 @@ from ml.classification_utils import classify_image
 from config import Configuration
 
 config = Configuration()
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-def allowed_file(filename):
-    """Method used to validate the filename of the uploaded file
-    prior to classifying it, to ensure only images are uploaded"""
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/classifications_upload', methods=['GET', 'POST'])
 def classifications_upload():
@@ -44,8 +39,12 @@ def classifications_upload():
             return redirect(request.url)
 
 
-        filename = secure_filename(file.filename)
-        
+        # Save the image into the imagenet images folder temporarily
+        filename = save_image_temp(file)
+        # Scheduling a background job to delete the uploaded image file
+        # after 10 seconds
+        threading.Thread(target=delete_temp_image, args=(filename,)).start()
+
         redis_url = Configuration.REDIS_URL
         redis_conn = redis.from_url(redis_url)
         with Connection(redis_conn):
@@ -59,3 +58,30 @@ def classifications_upload():
         return render_template("classification_output_queue.html", image_id=filename, jobID=task.get_id())
 
     return render_template('classification_select_upload.html', form=form)
+
+def allowed_file(filename):
+    """Function used to validate the filename of the uploaded file
+    prior to classifying it, to ensure only images are uploaded"""
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def save_image_temp(file):
+    """Function used to save the image file into the static_img
+    folder temporarily"""
+    filename = 'temp_img_'+str(time.time())
+    file.save(os.path.join(config.image_folder_path, filename))
+
+    return filename
+
+def delete_temp_image(filename):
+    """Function used to delete the uploadd file after 
+    the classification
+    """
+    time.sleep(10)
+    try:
+        os.remove(os.path.join(config.image_folder_path, filename))
+    except Exception as e:
+        error_message = f"Error deleting temporary image {filename}: {e}"
+        with open('error_log.txt', 'a') as f:
+            f.write(error_message + '\n')
