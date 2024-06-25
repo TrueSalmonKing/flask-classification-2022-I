@@ -1,2 +1,0 @@
-Error deleting temporary image temp_img_1719176908.822381: [Errno 2] No such file or directory: 'temp_uploads/temp_img_1719176908.822381'
-Error deleting temporary image temp_img_1719177055.7227185: [Errno 2] No such file or directory: 'temp_uploads/temp_img_1719177055.7227185'
